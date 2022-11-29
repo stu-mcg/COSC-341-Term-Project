@@ -1,6 +1,5 @@
 *.iml
 .gradle
-gradle.proporties
 /local.properties
 /.idea/caches
 /.idea/libraries
