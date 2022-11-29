@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.afrito">
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AFRITO"
         tools:targetApi="31">
+        <activity
+            android:name=".ConditionsBoardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ListReportsActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
