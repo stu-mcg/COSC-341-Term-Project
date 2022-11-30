@@ -28,6 +28,10 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Circle;
+import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
+import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
+import com.mapbox.mapboxsdk.plugins.annotation.OnCircleClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
@@ -46,10 +50,16 @@ public class MainActivity extends AppCompatActivity implements
     private MapView mapView;
 
     private MarkerViewManager markerViewManager;
-    private SymbolManager symbolManager;
-    private ArrayList<Symbol> markers;
+    private CircleManager circleManager;
+    private ArrayList<Circle> markers;
     private ArrayList<MarkerView> markerInfoBoxes;
-    private int selectedMarker = -1;
+    private int selectedReport = -1;
+    private double reportLatLngs[][] = {
+            {49.904678312972024, -119.48708391177118},
+            {49.907225395275944, -119.47146570338202},
+            {49.916333351789525, -119.4833972102201},
+            {49.91067885137928, -119.49023436582392},
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements
         mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
             @Override
             public boolean onMapClick(@NonNull LatLng point) {
-                if(selectedMarker != -1){
-                    markerViewManager.removeMarker(markerInfoBoxes.get(selectedMarker));
-                    selectedMarker = -1;
+                if(selectedReport != -1){
+                    markerViewManager.removeMarker(markerInfoBoxes.get(selectedReport));
+                    selectedReport = -1;
                 }
                 return false;
             }
@@ -87,20 +97,17 @@ public class MainActivity extends AppCompatActivity implements
                         enableLocationComponent(style);
                         centerOnUser(null);
 
-                        symbolManager = new SymbolManager(mapView, mapboxMap, style);
+                        circleManager = new CircleManager(mapView, mapboxMap, style);
                         markerViewManager = new MarkerViewManager(mapView, mapboxMap);
-                        symbolManager.setIconAllowOverlap(true);
-                        symbolManager.setIconIgnorePlacement(true);
-                        symbolManager.setTextAllowOverlap(true);
 
-                        markers = createMarkers(style);
+                        markers = createMarkers();
                         markerInfoBoxes = createMarkerInfoBoxes();
 
-                        symbolManager.addClickListener(new OnSymbolClickListener() {
+                        circleManager.addClickListener(new OnCircleClickListener() {
                             @Override
-                            public boolean onAnnotationClick(Symbol symbol) {
-                                selectedMarker = (int)symbol.getId();
-                                markerViewManager.addMarker(markerInfoBoxes.get(selectedMarker));
+                            public boolean onAnnotationClick(Circle circle) {
+                                selectedReport = (int) circle.getId();
+                                markerViewManager.addMarker(markerInfoBoxes.get(selectedReport));
                                 return false;
                             }
                         });
@@ -108,39 +115,27 @@ public class MainActivity extends AppCompatActivity implements
                 });
     }
 
-    private ArrayList<Symbol> createMarkers(Style style){
-        ArrayList<Symbol> markerSymbols = new ArrayList<Symbol>();
-        style.addImage("marker", BitmapFactory.decodeResource(getResources(), R.drawable.marker),true);
-
-        SymbolOptions symbolOptions = new SymbolOptions()
-                .withLatLng(new LatLng(49.90430, -119.48642))
-                .withIconImage("marker")
-                .withIconSize(0.09f);
-        markerSymbols.add(symbolManager.create(symbolOptions));
-        symbolOptions = new SymbolOptions()
-                .withLatLng(new LatLng(49.93673, -119.45401))
-                .withIconImage("marker")
-                .withIconSize(0.09f);
-        markerSymbols.add(symbolManager.create(symbolOptions));
-
-        return markerSymbols;
+    private ArrayList<Circle> createMarkers(){
+        ArrayList<Circle> circles = new ArrayList<Circle>();
+        for(double[] latLng : reportLatLngs){
+            CircleOptions circleOptions = new CircleOptions()
+                    .withLatLng(new LatLng(latLng[0], latLng[1]))
+                    .withCircleRadius(12f)
+                    .withCircleColor("red");
+            circles.add(circleManager.create(circleOptions));
+        }
+        return circles;
     }
 
     private ArrayList<MarkerView> createMarkerInfoBoxes(){
         ArrayList<MarkerView> markerViews = new ArrayList<MarkerView>();
-
-        View reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
-        reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-        ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText("Report 1");
-        ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("Report text");
-        markerViews.add(new MarkerView(new LatLng(49.90430, -119.48642), reportInfoView));
-
-        reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
-        reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-        ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText("Report 2");
-        ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("Report text");
-        markerViews.add(new MarkerView(new LatLng(49.93673, -119.45401), reportInfoView));
-
+        for(int i = 0; i < reportLatLngs.length; i++){
+            View reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
+            reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText("Report " + i);
+            ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("Report text");
+            markerViews.add(new MarkerView(new LatLng(reportLatLngs[i][0], reportLatLngs[i][1]), reportInfoView));
+        }
         return markerViews;
     }
 
