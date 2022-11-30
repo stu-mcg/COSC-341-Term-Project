@@ -3,6 +3,7 @@ package com.example.afrito;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -27,7 +28,12 @@ public class ViewReportActivity extends AppCompatActivity implements
     private MapboxMap mapboxMap;
     private MapView mapView;
     private CircleManager circleManager;
+    private String title;
+    private String desc;
+    private int type;
     private double[] latLng;
+    private Image img;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +41,13 @@ public class ViewReportActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_view_report);
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            int reportId = extras.getInt("reportId");
+            title = extras.getString("title");
+            desc = extras.getString("desc");
+            type = extras.getInt("type");
             latLng = extras.getDoubleArray("latLng");
-            ((TextView)findViewById(R.id.reportTitle)).setText("Report " + reportId);
-            ((TextView)findViewById(R.id.reportDesc)).setText("Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eros arcu, posuere ac diam quis, mattis semper ligula. Aenean in odio non ex dignissim semper ut in libero. Nam dapibus quam id luctus feugiat. In malesuada metus eget enim cursus, sit amet maximus tellus facilisis. Aliquam efficitur, dolor sed venenatis cursus, nibh nisi dapibus nisl, at lacinia sapien sem eu lectus. Ut vehicula faucibus justo, eget accumsan diam egestas nec. Ut sed lacus venenatis, vulputate enim vel, pellentesque metus. Morbi nunc risus, tempor eu gravida fringilla, laoreet ac nisl. Curabitur ultrices lectus sed sapien consectetur, in placerat risus placerat. Donec posuere felis non turpis sodales ullamcorper.");
+            img = (Image)extras.get("img");
+            ((TextView)findViewById(R.id.reportTitle)).setText(title);
+            ((TextView)findViewById(R.id.reportDesc)).setText("Description:\n" + desc);
         }
 
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));

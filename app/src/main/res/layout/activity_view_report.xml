@@ -85,12 +85,6 @@
                         android:layout_height="wrap_content"
                         android:text="Put more stuff here:" />
 
-                    <Button
-                        android:id="@+id/button7"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:text="Big button to take up space for now" />
-
                 </LinearLayout>
 
                 <Space

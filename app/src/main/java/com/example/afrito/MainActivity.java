@@ -56,16 +56,15 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<Circle> markers;
     private ArrayList<MarkerView> markerInfoBoxes;
     private int selectedReport = -1;
-    private double reportLatLngs[][] = {
-            {49.904678312972024, -119.48708391177118},
-            {49.907225395275944, -119.47146570338202},
-            {49.916333351789525, -119.4833972102201},
-            {49.91067885137928, -119.49023436582392},
-    };
+
+    private ArrayList<Report> reports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        reports = new ArrayList<Report>();
+        createExampleReports(reports);
 
         // Mapbox access token is configured here. This needs to be called either in your application
         // object or in the same activity which contains the mapview.
@@ -119,11 +118,13 @@ public class MainActivity extends AppCompatActivity implements
 
     private ArrayList<Circle> createMarkers(){
         ArrayList<Circle> circles = new ArrayList<Circle>();
-        for(double[] latLng : reportLatLngs){
+        for(Report report : reports){
+            double[] latLng = report.getLatLng();
+            String[] colors = {"yellow", "green", "red", "blue"};
             CircleOptions circleOptions = new CircleOptions()
                     .withLatLng(new LatLng(latLng[0], latLng[1]))
                     .withCircleRadius(12f)
-                    .withCircleColor("red");
+                    .withCircleColor(colors[report.getType()]);
             circles.add(circleManager.create(circleOptions));
         }
         return circles;
@@ -131,23 +132,27 @@ public class MainActivity extends AppCompatActivity implements
 
     private ArrayList<MarkerView> createMarkerInfoBoxes(){
         ArrayList<MarkerView> markerViews = new ArrayList<MarkerView>();
-        for(int i = 0; i < reportLatLngs.length; i++){
+        for(int i = 0; i < reports.size(); i++){
+            Report report = reports.get(i);
             View reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
             reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-            ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText("Report " + i);
-            ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("Report text");
+            ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText(report.getTitle());
+            ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("click to view");
             reportInfoView.setTag(i);
             reportInfoView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
                     int reportId = (int)view.getTag();
                     Intent intent = new Intent(MainActivity.this, ViewReportActivity.class);
-                    intent.putExtra("reportId", reportId);
-                    intent.putExtra("latLng", reportLatLngs[reportId]);
+                    intent.putExtra("title", report.getTitle());
+                    intent.putExtra("desc", report.getDesc());
+                    intent.putExtra("type", report.getType());
+                    intent.putExtra("latLng", report.getLatLng());
+                    intent.putExtra("img", report.getImg());
                     startActivity(intent);
                 }
             });
-            markerViews.add(new MarkerView(new LatLng(reportLatLngs[i][0], reportLatLngs[i][1]), reportInfoView));
+            markerViews.add(new MarkerView(new LatLng(report.getLatLng()[0], report.getLatLng()[1]), reportInfoView));
         }
         return markerViews;
     }
@@ -278,5 +283,36 @@ public class MainActivity extends AppCompatActivity implements
                     .build();
             mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
+    }
+
+    private void createExampleReports(ArrayList<Report> reports) {
+        reports.add(new Report(
+                "Trails are muddy",
+                "It's wet out here",
+                Report.ENV,
+                new double[] {49.904678312972024, -119.48708391177118},
+                null
+        ));
+        reports.add(new Report(
+                "Trail is closed",
+                "Trail work on going for the next month ",
+                Report.INF,
+                new double[] {49.907225395275944, -119.47146570338202},
+                null
+        ));
+        reports.add(new Report(
+                "Fallen tree",
+                "Watch out for a fallen tree blocking the trail. It's right after a blind corner",
+                Report.HZD,
+                new double[] {49.916333351789525, -119.4833972102201},
+                null
+        ));
+        reports.add(new Report(
+                "Great Viewpoint",
+                "turn left after the big rock. Brings you to a great spot to watch the sunset",
+                Report.POI,
+                new double[] {49.91067885137928, -119.49023436582392},
+                null
+        ));
     }
 }
