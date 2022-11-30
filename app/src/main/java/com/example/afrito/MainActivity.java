@@ -5,6 +5,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -134,6 +136,17 @@ public class MainActivity extends AppCompatActivity implements
             reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
             ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText("Report " + i);
             ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("Report text");
+            reportInfoView.setTag(i);
+            reportInfoView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    int reportId = (int)view.getTag();
+                    Intent intent = new Intent(MainActivity.this, ViewReportActivity.class);
+                    intent.putExtra("reportId", reportId);
+                    intent.putExtra("latLng", reportLatLngs[reportId]);
+                    startActivity(intent);
+                }
+            });
             markerViews.add(new MarkerView(new LatLng(reportLatLngs[i][0], reportLatLngs[i][1]), reportInfoView));
         }
         return markerViews;

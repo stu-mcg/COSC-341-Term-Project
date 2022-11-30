@@ -4,14 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="onClickAnywhere"
     tools:context=".MainActivity">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="onClickAnywhere"
         mapbox:layout_constraintBottom_toBottomOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toTopOf="parent"
@@ -19,7 +17,6 @@
         mapbox:mapbox_cameraTargetLat="49.9141"
         mapbox:mapbox_cameraTargetLng="-119.4827"
         mapbox:mapbox_cameraZoom="9.0">
-
     </com.mapbox.mapboxsdk.maps.MapView>
 
     <LinearLayout
