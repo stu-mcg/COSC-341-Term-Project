@@ -21,36 +21,56 @@
     </com.mapbox.mapboxsdk.maps.MapView>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        mapbox:layout_constraintBottom_toBottomOf="@+id/mapView"
+        android:orientation="vertical"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
         mapbox:layout_constraintEnd_toEndOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="listReports"
-            android:text="List Reports" />
+            android:layoutDirection="rtl"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/createReport"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="createReport"
-            android:text="Create Report" />
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="centerOnUser"
+                android:text="\@" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/conditionsBoard"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="conditionsBoard"
-            android:text="Conditions Board" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="listReports"
+                android:text="List Reports" />
+
+            <Button
+                android:id="@+id/createReport"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="createReport"
+                android:text="Create Report" />
+
+            <Button
+                android:id="@+id/conditionsBoard"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="conditionsBoard"
+                android:text="Conditions Board" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
