@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.mapbox.maps.MapView
+    <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
         mapbox:mapbox_cameraTargetLng="-119.4827"
         mapbox:mapbox_cameraZoom="9.0">
 
-    </com.mapbox.maps.MapView>
+    </com.mapbox.mapboxsdk.maps.MapView>
 
     <LinearLayout
         android:layout_width="match_parent"
