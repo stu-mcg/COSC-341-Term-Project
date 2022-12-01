@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
-                        centerOnUser(null);
+                        //centerOnUser(null);
 
                         circleManager = new CircleManager(mapView, mapboxMap, style);
                         markerViewManager = new MarkerViewManager(mapView, mapboxMap);
