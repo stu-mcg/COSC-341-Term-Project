@@ -9,7 +9,7 @@ C:\Users\<username>\.gradle\gradle.properties
 
 Mac
 ```
-/Users/<username/.gradle/gradle.properties
+/Users/<username>/.gradle/gradle.properties
 ```
 
 Add the line:
