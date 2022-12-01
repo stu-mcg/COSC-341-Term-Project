@@ -17,17 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/createReportHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="home"
-        android:text="CREATE"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -46,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Type:"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.071"
@@ -58,6 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description:"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
@@ -70,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Photo:"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.07"
@@ -78,7 +70,7 @@
         app:layout_constraintVertical_bias="0.575" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/title"
         android:layout_width="246dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -88,77 +80,91 @@
         app:layout_constraintHorizontal_bias="0.563"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.155" />
+        app:layout_constraintVertical_bias="0.155"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="159dp"
-        android:layout_height="158dp"
+        android:layout_width="165dp"
+        android:layout_height="145dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.369"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.748"
+        app:layout_constraintVertical_bias="0.699"
         tools:srcCompat="@tools:sample/avatars" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
-        android:layout_width="248dp"
-        android:layout_height="67dp"
+        android:id="@+id/desc"
+        android:layout_width="326dp"
+        android:layout_height="51dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintHorizontal_bias="0.282"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.365" />
+        app:layout_constraintVertical_bias="0.392"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="321dp"
-        android:layout_height="48dp"
+        android:layout_width="263dp"
+        android:layout_height="49dp"
         android:layout_marginTop="168dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.833"
+        app:layout_constraintHorizontal_bias="0.628"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
-            android:id="@+id/animal"
+            android:id="@+id/POI"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ANIMAL"
+            android:text="POI"
             tools:layout_editor_absoluteX="75dp"
             tools:layout_editor_absoluteY="172dp" />
 
         <RadioButton
-            android:id="@+id/sos"
+            android:id="@+id/ENV"
             android:layout_width="69dp"
             android:layout_height="48dp"
-            android:text="SOS"
+            android:text="ENV"
             tools:layout_editor_absoluteX="241dp"
             tools:layout_editor_absoluteY="172dp" />
 
         <RadioButton
-            android:id="@+id/enviro"
+            android:id="@+id/HZD"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ENVIRO"
+            android:text="HZD"
             tools:layout_editor_absoluteX="160dp"
             tools:layout_editor_absoluteY="172dp" />
 
         <RadioButton
-            android:id="@+id/closed"
+            android:id="@+id/INF"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="CLOSED"
+            android:text="INF"
             tools:layout_editor_absoluteX="302dp"
             tools:layout_editor_absoluteY="172dp" />
 
     </RadioGroup>
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="100dp"
+        android:layout_height="54dp"
+        android:text="CREATE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
