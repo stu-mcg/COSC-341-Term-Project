@@ -1,16 +1,29 @@
 package com.example.afrito;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+
+import java.io.File;
 
 public class CreateReportActivity extends AppCompatActivity {
     int type;
+    ActivityResultLauncher<Intent> arl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +37,28 @@ public class CreateReportActivity extends AppCompatActivity {
         RadioButton INF = findViewById(R.id.INF);
 
         Button create = findViewById(R.id.create);
+
+        ImageButton cam = findViewById(R.id.imageButton);
+
+        arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                cam.setVisibility(View.INVISIBLE);
+                if(result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    ImageView imageView = findViewById(R.id.imageView);
+                    Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
+                    imageView.setImageBitmap(photo);
+                }
+            }
+        });
+        cam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                arl.launch(cameraIntent);
+            }
+        });
+
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,6 +74,8 @@ public class CreateReportActivity extends AppCompatActivity {
             }
         });
     }
+
+
     public void onRadioButtonClicked(View view) {
 
         boolean checked = ((RadioButton) view).isChecked();
