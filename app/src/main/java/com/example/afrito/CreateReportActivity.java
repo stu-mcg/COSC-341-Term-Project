@@ -46,6 +46,7 @@ public class CreateReportActivity extends AppCompatActivity implements
     private CircleManager circleManager;
 
     int type;
+    ActivityResultLauncher<Intent> arl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,24 +69,25 @@ public class CreateReportActivity extends AppCompatActivity implements
 
         ImageButton cam = findViewById(R.id.imageButton);
 
+        arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if(result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    LinearLayout imageScroller = (LinearLayout) findViewById(R.id.photoScroll);
+                    ImageView imageView = new ImageView(CreateReportActivity.this);
+                    float factor = CreateReportActivity.this.getResources().getDisplayMetrics().density;
+                    imageView.setLayoutParams(new LinearLayout.LayoutParams((int)(150 * factor), (int)(150 * factor)));
+                    imageScroller.addView(imageView);
+                    Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
+                    imageView.setImageBitmap(photo);
+                }
+            }
+        });
+
         cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if(result.getResultCode() == RESULT_OK && result.getData() != null) {
-                            LinearLayout imageScroller = (LinearLayout) findViewById(R.id.photoScroll);
-                            ImageView imageView = new ImageView(CreateReportActivity.this);
-                            float factor = CreateReportActivity.this.getResources().getDisplayMetrics().density;
-                            imageView.setLayoutParams(new LinearLayout.LayoutParams((int)(150 * factor), (int)(150 * factor)));
-                            imageScroller.addView(imageView);
-                            Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
-                            imageView.setImageBitmap(photo);
-                        }
-                    }
-                });
                 arl.launch(cameraIntent);
             }
         });
