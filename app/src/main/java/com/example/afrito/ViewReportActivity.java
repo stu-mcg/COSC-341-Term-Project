@@ -16,16 +16,12 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.annotation.Circle;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
-import com.mapbox.mapboxsdk.plugins.annotation.OnCircleClickListener;
-import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager;
 
 public class ViewReportActivity extends AppCompatActivity implements
         OnMapReadyCallback {
 
-    private MapboxMap mapboxMap;
     private MapView mapView;
     private CircleManager circleManager;
     private String title;
@@ -51,14 +47,13 @@ public class ViewReportActivity extends AppCompatActivity implements
         }
 
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-        mapView = findViewById(R.id.miniMapView);
+        mapView = findViewById(R.id.selectLocationMapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
-        ViewReportActivity.this.mapboxMap = mapboxMap;
         mapboxMap.setStyle(Style.OUTDOORS,
                 new Style.OnStyleLoaded() {
                     @Override

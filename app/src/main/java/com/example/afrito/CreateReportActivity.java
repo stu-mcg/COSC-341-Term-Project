@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,16 +18,43 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
+
+import com.mapbox.android.core.permissions.PermissionsListener;
+import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
+import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 
 import java.io.File;
 
-public class CreateReportActivity extends AppCompatActivity {
+public class CreateReportActivity extends AppCompatActivity implements
+        OnMapReadyCallback{
+
+    private MapboxMap mapboxMap;
+    private MapView mapView;
+    private CircleManager circleManager;
+
     int type;
-    ActivityResultLauncher<Intent> arl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+//        mapView = findViewById(R.id.selectLocationMapView);
+//        mapView.onCreate(savedInstanceState);
+//        mapView.getMapAsync(this);
+
         setContentView(R.layout.activity_create_report);
 
         EditText title = findViewById(R.id.title);
@@ -40,21 +68,24 @@ public class CreateReportActivity extends AppCompatActivity {
 
         ImageButton cam = findViewById(R.id.imageButton);
 
-        arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                cam.setVisibility(View.INVISIBLE);
-                if(result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    ImageView imageView = findViewById(R.id.imageView);
-                    Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
-                    imageView.setImageBitmap(photo);
-                }
-            }
-        });
         cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if(result.getResultCode() == RESULT_OK && result.getData() != null) {
+                            LinearLayout imageScroller = (LinearLayout) findViewById(R.id.photoScroll);
+                            ImageView imageView = new ImageView(CreateReportActivity.this);
+                            float factor = CreateReportActivity.this.getResources().getDisplayMetrics().density;
+                            imageView.setLayoutParams(new LinearLayout.LayoutParams((int)(150 * factor), (int)(150 * factor)));
+                            imageScroller.addView(imageView);
+                            Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
+                            imageView.setImageBitmap(photo);
+                        }
+                    }
+                });
                 arl.launch(cameraIntent);
             }
         });
@@ -100,5 +131,31 @@ public class CreateReportActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onMapReady(@NonNull final MapboxMap mapboxMap) {
+        mapboxMap.setStyle(Style.OUTDOORS,
+                new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        CreateReportActivity.this.mapboxMap = mapboxMap;
 
+                        LocationComponent locationComponent = mapboxMap.getLocationComponent();
+                        if(locationComponent != null){
+                            double lng = locationComponent.getLastKnownLocation().getLongitude();
+                            double lat = locationComponent.getLastKnownLocation().getLatitude();
+                            CameraPosition position = new CameraPosition.Builder()
+                                    .target(new LatLng(lat, lng))
+                                    .zoom(13)
+                                    .tilt(10)
+                                    .build();
+                            mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
