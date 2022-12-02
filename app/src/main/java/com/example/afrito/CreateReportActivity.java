@@ -37,6 +37,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class CreateReportActivity extends AppCompatActivity implements
         OnMapReadyCallback{
@@ -102,8 +103,11 @@ public class CreateReportActivity extends AppCompatActivity implements
                 onRadioButtonClicked(HZD);
                 onRadioButtonClicked(INF);
                 //using sample coord & null image for now
-                Report r = new Report(t, d, type, new double[]{49.916333351789525, -119.4833972102201}, null );
-                finish();
+                ArrayList<Report> reports = getIntent().getParcelableArrayListExtra("reports");
+                reports.add(new Report(t, d, type, new double[]{49.916333351789525, -119.4833972102201}, null ));
+                Intent intent = new Intent(CreateReportActivity.this, MainActivity.class);
+                intent.putExtra("reports", reports);
+                startActivity(intent);
             }
         });
     }

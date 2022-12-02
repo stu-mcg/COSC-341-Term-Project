@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void createReport(View view){
         Intent intent = new Intent(this, CreateReportActivity.class);
+        intent.putParcelableArrayListExtra("reports", reports);
         startActivity(intent);
     }
 
