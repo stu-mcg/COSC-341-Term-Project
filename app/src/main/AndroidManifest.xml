@@ -29,7 +29,7 @@
             android:name=".CreateReportActivity"
             android:exported="false" />
         <activity
-            android:name=".ListReportsActivity"
+            android:name=".ListMyReportsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

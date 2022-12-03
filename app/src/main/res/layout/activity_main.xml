@@ -52,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:onClick="listReports"
-                android:text="List Reports" />
+                android:text="List My Reports" />
 
             <Button
                 android:id="@+id/createReport"

@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,7 +29,6 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -40,10 +38,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.Circle;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.OnCircleClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.markerview.MarkerView;
 import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager;
 
@@ -126,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
-                        //centerOnUser(null);
+                        centerOnUser(null);
 
                         circleManager = new CircleManager(mapView, mapboxMap, style);
                         markerViewManager = new MarkerViewManager(mapView, mapboxMap);
@@ -276,7 +270,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void listReports(View view){
-        Intent intent = new Intent(this, ListReportsActivity.class);
+        Intent intent = new Intent(this, ListMyReportsActivity.class);
+        intent.putExtra("reports", reports);
         startActivity(intent);
     }
 
@@ -314,7 +309,8 @@ public class MainActivity extends AppCompatActivity implements
                 new Bitmap[] {
                         BitmapFactory.decodeResource(this.getResources(), R.drawable.mud),
                 },
-                this
+                this,
+                false
         ));
         reports.add(new Report(
                 "Trail is closed",
@@ -326,7 +322,8 @@ public class MainActivity extends AppCompatActivity implements
                         BitmapFactory.decodeResource(this.getResources(), R.drawable.trailwork2),
                         BitmapFactory.decodeResource(this.getResources(), R.drawable.trailwork3),
                 },
-                this
+                this,
+                false
         ));
         reports.add(new Report(
                 "Fallen tree",
@@ -334,7 +331,8 @@ public class MainActivity extends AppCompatActivity implements
                 Report.HZD,
                 new double[] {49.916333351789525, -119.4833972102201},
                 new Bitmap[] {},
-                this
+                this,
+                false
         ));
         reports.add(new Report(
                 "Great Viewpoint",
@@ -344,7 +342,8 @@ public class MainActivity extends AppCompatActivity implements
                 new Bitmap[] {
                         BitmapFactory.decodeResource(this.getResources(), R.drawable.view),
                 },
-                this
+                this,
+                false
         ));
     }
 }

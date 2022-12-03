@@ -174,7 +174,8 @@ public class CreateReportActivity extends AppCompatActivity implements
                         type,
                         latLng,
                         imgs.toArray(new Bitmap[imgs.size()]),
-                        CreateReportActivity.this
+                        CreateReportActivity.this,
+                        true
                         );
                 Intent data = new Intent();
                 data.putExtra("report", report);

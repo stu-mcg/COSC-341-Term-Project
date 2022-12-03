@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.FileUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
 
@@ -33,12 +34,14 @@ public class Report implements Parcelable {
     private int type;
     private double [] latLng;
     private String[] imgs;
+    private Boolean userCreated;
 
-    public Report(String title, String desc, int type, double[] latLng, Bitmap[] imgs, Context context) {
+    public Report(String title, String desc, int type, double[] latLng, Bitmap[] imgs, Context context, Boolean userCreated) {
         this.title = title;
         this.desc = desc;
         this.type = type;
         this.latLng = latLng;
+        this.userCreated = userCreated;
         this.imgs = new String[imgs.length];
 
         for(int i = 0; i < imgs.length; i++) {
@@ -57,7 +60,7 @@ public class Report implements Parcelable {
         try {
             fos = new FileOutputStream(path);
             // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 10, fos);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, fos);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -104,6 +107,7 @@ public class Report implements Parcelable {
         type = in.readInt();
         latLng = in.createDoubleArray();
         imgs = in.createStringArray();
+        userCreated = in.readInt() == 1 ? true : false;
     }
 
     public static final Creator<Report> CREATOR = new Creator<Report>() {
@@ -134,6 +138,10 @@ public class Report implements Parcelable {
         return latLng;
     }
 
+    public Boolean getUserCreated() {
+        return userCreated;
+    }
+
     public Bitmap[] getImgs() {
         Bitmap[] imgsOut = new Bitmap[imgs.length];
         for(int i = 0; i < imgs.length; i++){
@@ -154,6 +162,7 @@ public class Report implements Parcelable {
         parcel.writeInt(type);
         parcel.writeDoubleArray(latLng);
         parcel.writeStringArray(imgs);
+        parcel.writeInt(userCreated ? 1 : 0);
     }
 
     public static void clearImages(Context context){
