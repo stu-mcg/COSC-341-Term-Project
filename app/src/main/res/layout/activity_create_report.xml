@@ -48,7 +48,7 @@
                 android:layout_weight="1" />
 
             <ScrollView
-                android:id="@+id/scrollView2"
+                android:id="@+id/createReportScrollView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="15"
@@ -93,7 +93,7 @@
                             android:textSize="20sp" />
 
                         <RadioGroup
-                            android:id="@+id/radioGroup"
+                            android:id="@+id/reportTypeRadioGroup"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -155,23 +155,55 @@
                         android:text="Location:"
                         android:textSize="20sp" />
 
-                    <com.mapbox.mapboxsdk.maps.MapView
-                        android:id="@+id/selectLocationMapView"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        mapbox:layout_constraintBottom_toBottomOf="parent"
-                        mapbox:layout_constraintStart_toStartOf="parent"
-                        mapbox:layout_constraintTop_toTopOf="parent"
-                        mapbox:layout_constraintVertical_bias="0.0"
-                        mapbox:mapbox_cameraTargetLat="49.9141"
-                        mapbox:mapbox_cameraTargetLng="-119.4827"
-                        mapbox:mapbox_cameraZoom="9.0">
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <com.mapbox.mapboxsdk.maps.MapView
+                            android:id="@+id/viewReportMapView"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            mapbox:layout_constraintBottom_toBottomOf="parent"
+                            mapbox:layout_constraintStart_toStartOf="parent"
+                            mapbox:layout_constraintTop_toTopOf="parent"
+                            mapbox:layout_constraintVertical_bias="0.0"
+                            mapbox:mapbox_cameraTargetLat="49.9141"
+                            mapbox:mapbox_cameraTargetLng="-119.4827"
+                            mapbox:mapbox_cameraZoom="9.0">
+
+                        </com.mapbox.mapboxsdk.maps.MapView>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="16dp"
+                            android:orientation="vertical">
 
-                    </com.mapbox.mapboxsdk.maps.MapView>
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <Button
+                                android:id="@+id/setLocationCurrent"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Current Location" />
+
+                            <Button
+                                android:id="@+id/selectOtherLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Select Other Location" />
+
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/textView7"

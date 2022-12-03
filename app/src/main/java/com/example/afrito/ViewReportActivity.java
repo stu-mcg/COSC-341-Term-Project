@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.Image;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -47,7 +48,7 @@ public class ViewReportActivity extends AppCompatActivity implements
         }
 
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-        mapView = findViewById(R.id.selectLocationMapView);
+        mapView = findViewById(R.id.viewReportMapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
