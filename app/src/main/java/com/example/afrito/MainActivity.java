@@ -53,6 +53,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback, PermissionsListener {
 
+    private static Boolean firstLoad = true;
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -70,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(firstLoad){
+            Report.clearImages(this);
+            firstLoad = false;
+        }
 
         reports = new ArrayList<Report>();
         createExampleReports(reports);
@@ -305,28 +311,40 @@ public class MainActivity extends AppCompatActivity implements
                 "It's wet out here",
                 Report.ENV,
                 new double[] {49.904678312972024, -119.48708391177118},
-                new Bitmap[] {}
+                new Bitmap[] {
+                        BitmapFactory.decodeResource(this.getResources(), R.drawable.mud),
+                },
+                this
         ));
         reports.add(new Report(
                 "Trail is closed",
                 "Trail work on going for the next month ",
                 Report.INF,
                 new double[] {49.907225395275944, -119.47146570338202},
-                new Bitmap[] {}
+                new Bitmap[] {
+                        BitmapFactory.decodeResource(this.getResources(), R.drawable.trailwork1),
+                        BitmapFactory.decodeResource(this.getResources(), R.drawable.trailwork2),
+                        BitmapFactory.decodeResource(this.getResources(), R.drawable.trailwork3),
+                },
+                this
         ));
         reports.add(new Report(
                 "Fallen tree",
                 "Watch out for a fallen tree blocking the trail. It's right after a blind corner",
                 Report.HZD,
                 new double[] {49.916333351789525, -119.4833972102201},
-                new Bitmap[] {}
+                new Bitmap[] {},
+                this
         ));
         reports.add(new Report(
                 "Great Viewpoint",
                 "turn left after the big rock. Brings you to a great spot to watch the sunset",
                 Report.POI,
                 new double[] {49.91067885137928, -119.49023436582392},
-                new Bitmap[] {}
+                new Bitmap[] {
+                        BitmapFactory.decodeResource(this.getResources(), R.drawable.view),
+                },
+                this
         ));
     }
 }

@@ -173,7 +173,8 @@ public class CreateReportActivity extends AppCompatActivity implements
                         desc.getText().toString(),
                         type,
                         latLng,
-                        imgs.toArray(new Bitmap[imgs.size()])
+                        imgs.toArray(new Bitmap[imgs.size()]),
+                        CreateReportActivity.this
                         );
                 Intent data = new Intent();
                 data.putExtra("report", report);
