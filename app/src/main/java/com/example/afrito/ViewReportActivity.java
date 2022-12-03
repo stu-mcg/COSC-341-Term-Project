@@ -3,10 +3,13 @@ package com.example.afrito;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.Mapbox;
@@ -25,11 +28,8 @@ public class ViewReportActivity extends AppCompatActivity implements
 
     private MapView mapView;
     private CircleManager circleManager;
-    private String title;
-    private String desc;
-    private int type;
     private double[] latLng;
-    private Image img;
+    private int type;
 
 
     @Override
@@ -38,13 +38,26 @@ public class ViewReportActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_view_report);
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            title = extras.getString("title");
-            desc = extras.getString("desc");
-            type = extras.getInt("type");
-            latLng = extras.getDoubleArray("latLng");
-            //img = (Image)extras.get("img");
-            ((TextView)findViewById(R.id.reportTitle)).setText(title);
-            ((TextView)findViewById(R.id.reportDesc)).setText("Description:\n" + desc);
+            Report report = extras.getParcelable("report");
+            ((TextView)findViewById(R.id.reportTitle)).setText(report.getTitle());
+            type = report.getType();
+            String[] colors = {"#ad9a1a", "#216b26", "#eb1d0e", "#0e1deb"};
+            String[] types = {"Point of Interest", "Environmental Conditions", "Hazard", "Information"};
+            ((TextView)findViewById(R.id.typeText)).setText(types[type]);
+            ((TextView)findViewById(R.id.typeText)).setTextColor(Color.parseColor(colors[type]));
+            ((TextView)findViewById(R.id.descText)).setText(report.getDesc());
+
+            for(int i = 0; i < report.getImgs().length; i++) {
+                LinearLayout imageScroller = (LinearLayout) findViewById(R.id.viewReportImageScroll);
+                ImageView imageView = new ImageView(ViewReportActivity.this);
+                float factor = ViewReportActivity.this.getResources().getDisplayMetrics().density;
+                imageView.setLayoutParams(new LinearLayout.LayoutParams((int) (200 * factor), (int) (200 * factor)));
+                imageScroller.addView(imageView);
+                imageView.setImageBitmap(report.getImgs()[i]);
+            }
+
+            latLng = report.getLatLng();
+
         }
 
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
@@ -60,10 +73,11 @@ public class ViewReportActivity extends AppCompatActivity implements
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
                         circleManager = new CircleManager(mapView, mapboxMap, style);
+                        String[] colors = {"yellow", "green", "red", "blue"};
                         CircleOptions circleOptions = new CircleOptions()
                                 .withLatLng(new LatLng(latLng[0], latLng[1]))
                                 .withCircleRadius(12f)
-                                .withCircleColor("red");
+                                .withCircleColor(colors[type]);
                         circleManager.create(circleOptions);
                         CameraPosition position = new CameraPosition.Builder()
                                 .target(new LatLng(latLng[0], latLng[1]))

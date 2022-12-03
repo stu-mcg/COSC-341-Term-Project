@@ -163,11 +163,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 int reportId = (int)view.getTag();
                 Intent intent = new Intent(MainActivity.this, ViewReportActivity.class);
-                intent.putExtra("title", report.getTitle());
-                intent.putExtra("desc", report.getDesc());
-                intent.putExtra("type", report.getType());
-                intent.putExtra("latLng", report.getLatLng());
-                intent.putExtra("img", report.getImgs());
+                intent.putExtra("report", report);
                 startActivity(intent);
             }
         });

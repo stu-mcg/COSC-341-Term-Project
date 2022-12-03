@@ -219,9 +219,7 @@ public class CreateReportActivity extends AppCompatActivity implements
                         mapboxStyle = style;
                         circleManager = new CircleManager(mapView, mapboxMap, style);
                         locationComponent = getLocationComponect();
-                        if(latLng[0] == -1) {
-                            setLocationToCurrent();
-                        }
+                        setLocationToCurrent();
                         updateLocation();
                     }
                 });
