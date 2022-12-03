@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -56,7 +57,9 @@ public class CreateReportActivity extends AppCompatActivity implements
 
     private double[] latLng = {-1, -1};
     private int type = 0;
-    ActivityResultLauncher<Intent> arl;
+    ActivityResultLauncher<Intent> cameraResultLauncher;
+    ActivityResultLauncher<Intent> selectLocationResultLauncher;
+    
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class CreateReportActivity extends AppCompatActivity implements
             }
         });
 
-        arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        cameraResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if(result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -122,11 +125,23 @@ public class CreateReportActivity extends AppCompatActivity implements
             }
         });
 
+
+        selectLocationResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    latLng = data.getExtras().getDoubleArray("latLng");
+                    updateLocation();
+                }
+            }
+        });
+
         findViewById(R.id.imageButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                arl.launch(cameraIntent);
+                cameraResultLauncher.launch(cameraIntent);
             }
         });
 
@@ -153,11 +168,13 @@ public class CreateReportActivity extends AppCompatActivity implements
         });
 
 
+        
+
         findViewById(R.id.selectOtherLocation).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CreateReportActivity.this, SelectLocationActivity.class));
-
+                Intent intent = new Intent(CreateReportActivity.this, SelectLocationActivity.class);
+                selectLocationResultLauncher.launch(intent);
             }
         });
 

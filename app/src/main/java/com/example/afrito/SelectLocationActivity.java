@@ -2,6 +2,7 @@ package com.example.afrito;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -69,6 +70,7 @@ public class SelectLocationActivity extends AppCompatActivity implements
         findViewById(R.id.selectLocationBackButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(Activity.RESULT_CANCELED);
                 finish();
             }
         });
@@ -76,6 +78,13 @@ public class SelectLocationActivity extends AppCompatActivity implements
         findViewById(R.id.selectLocationButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent data = new Intent();
+                LatLng location = mapboxMap.getLatLngBoundsZoomFromCamera(mapboxMap.getCameraPosition()).getLatLngBounds().getCenter();
+                data.putExtra("latLng", new double[] {
+                        location.getLatitude(),
+                        location.getLongitude()
+                });
+                setResult(Activity.RESULT_OK, data);
                 finish();
             }
         });
