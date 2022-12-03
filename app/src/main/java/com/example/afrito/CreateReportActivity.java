@@ -140,7 +140,24 @@ public class CreateReportActivity extends AppCompatActivity implements
                 reports.add(new Report(t, d, type, new double[]{49.916333351789525, -119.4833972102201}, null ));
                 Intent intent = new Intent(CreateReportActivity.this, MainActivity.class);
                 intent.putExtra("reports", reports);
-                startActivity(intent);
+//                startActivity(intent);  //we don't want to start a new main activity, will create and infinite loop kinda
+                finish();
+            }
+        });
+
+        findViewById(R.id.createReportBackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
+        findViewById(R.id.selectOtherLocation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(CreateReportActivity.this, SelectLocationActivity.class));
+
             }
         });
 

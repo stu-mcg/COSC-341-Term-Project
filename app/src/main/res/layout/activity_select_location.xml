@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".SelectLocationActivity">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -17,10 +17,25 @@
         mapbox:mapbox_cameraTargetLat="49.9141"
         mapbox:mapbox_cameraTargetLng="-119.4827"
         mapbox:mapbox_cameraZoom="9.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mapbox_marker_icon_default"
+                mapbox:layout_constraintBottom_toBottomOf="parent"
+                mapbox:layout_constraintEnd_toEndOf="parent"
+                mapbox:layout_constraintStart_toStartOf="parent"
+                mapbox:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.mapbox.mapboxsdk.maps.MapView>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         mapbox:layout_constraintBottom_toBottomOf="parent"
@@ -37,7 +52,6 @@
                 android:id="@+id/selectLocationCenterButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="centerOnUser"
                 android:text="\@" />
         </LinearLayout>
 
@@ -51,24 +65,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="listReports"
-                android:text="List Reports" />
+                android:text="Back" />
 
-            <Button
-                android:id="@+id/createReport"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="createReport"
-                android:text="Create Report" />
 
             <Button
                 android:id="@+id/selectLocationButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="conditionsBoard"
-                android:text="Conditions Board" />
+                android:text="Select Location" />
         </LinearLayout>
     </LinearLayout>
 
