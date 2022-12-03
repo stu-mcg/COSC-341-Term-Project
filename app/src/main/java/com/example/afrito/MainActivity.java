@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void createReport(View view){
         Intent intent = new Intent(this, CreateReportActivity.class);
+        intent.putParcelableArrayListExtra("reports", reports);
         intent.putExtra("latLng", new double[] {49.916333351789525, -119.4833972102201});
         startActivity(intent);
     }

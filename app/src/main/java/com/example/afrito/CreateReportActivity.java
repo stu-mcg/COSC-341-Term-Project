@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +42,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class CreateReportActivity extends AppCompatActivity implements
         OnMapReadyCallback, PermissionsListener {
@@ -134,8 +136,11 @@ public class CreateReportActivity extends AppCompatActivity implements
                 String t = title.getText().toString();
                 String d = desc.getText().toString();
                 //using sample coord & null image for now
-                Report r = new Report(t, d, type, new double[]{49.916333351789525, -119.4833972102201}, null );
-                finish();
+                ArrayList<Report> reports = getIntent().getParcelableArrayListExtra("reports");
+                reports.add(new Report(t, d, type, new double[]{49.916333351789525, -119.4833972102201}, null ));
+                Intent intent = new Intent(CreateReportActivity.this, MainActivity.class);
+                intent.putExtra("reports", reports);
+                startActivity(intent);
             }
         });
 
