@@ -35,6 +35,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
+import com.mapbox.mapboxsdk.maps.Image;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -57,6 +58,7 @@ public class CreateReportActivity extends AppCompatActivity implements
 
     private double[] latLng = {-1, -1};
     private int type = 0;
+    private ArrayList<Bitmap> imgs;
     ActivityResultLauncher<Intent> cameraResultLauncher;
     ActivityResultLauncher<Intent> selectLocationResultLauncher;
     
@@ -70,6 +72,7 @@ public class CreateReportActivity extends AppCompatActivity implements
         if(extras != null){
             latLng = extras.getDoubleArray("latLng");
         }
+        imgs = new ArrayList<Bitmap>();
 
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         mapView = findViewById(R.id.viewReportMapView);
@@ -121,6 +124,7 @@ public class CreateReportActivity extends AppCompatActivity implements
                     imageScroller.addView(imageView);
                     Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
                     imageView.setImageBitmap(photo);
+                    imgs.add(photo);
                 }
             }
         });
@@ -148,14 +152,16 @@ public class CreateReportActivity extends AppCompatActivity implements
         findViewById(R.id.create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t = title.getText().toString();
-                String d = desc.getText().toString();
-                //using sample coord & null image for now
-                ArrayList<Report> reports = getIntent().getParcelableArrayListExtra("reports");
-                reports.add(new Report(t, d, type, new double[]{49.916333351789525, -119.4833972102201}, null ));
-                Intent intent = new Intent(CreateReportActivity.this, MainActivity.class);
-                intent.putExtra("reports", reports);
-//                startActivity(intent);  //we don't want to start a new main activity, will create and infinite loop kinda
+                Report report = new Report(
+                        title.getText().toString(),
+                        desc.getText().toString(),
+                        type,
+                        latLng,
+                        imgs.toArray(new Bitmap[imgs.size()])
+                        );
+                Intent data = new Intent();
+                data.putExtra("report", report);
+                setResult(Activity.RESULT_OK, data);
                 finish();
             }
         });

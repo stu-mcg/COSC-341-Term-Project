@@ -42,7 +42,7 @@ public class ViewReportActivity extends AppCompatActivity implements
             desc = extras.getString("desc");
             type = extras.getInt("type");
             latLng = extras.getDoubleArray("latLng");
-            img = (Image)extras.get("img");
+            //img = (Image)extras.get("img");
             ((TextView)findViewById(R.id.reportTitle)).setText(title);
             ((TextView)findViewById(R.id.reportDesc)).setText("Description:\n" + desc);
         }

@@ -2,10 +2,16 @@ package com.example.afrito;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,12 +65,17 @@ public class MainActivity extends AppCompatActivity implements
 
     private ArrayList<Report> reports;
 
+    ActivityResultLauncher<Intent> createReportResultLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         reports = new ArrayList<Report>();
         createExampleReports(reports);
+        markers = new ArrayList<Circle>();
+        markerInfoBoxes = new ArrayList<MarkerView>();
+
 
         // Mapbox access token is configured here. This needs to be called either in your application
         // object or in the same activity which contains the mapview.
@@ -76,6 +87,19 @@ public class MainActivity extends AppCompatActivity implements
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        createReportResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Report report = data.getExtras().getParcelable("report");
+                    reports.add(report);
+                    addMarker(report);
+                    addInfoBox(report, reports.size());
+                }
+            }
+        });
     }
 
     @Override
@@ -101,8 +125,10 @@ public class MainActivity extends AppCompatActivity implements
                         circleManager = new CircleManager(mapView, mapboxMap, style);
                         markerViewManager = new MarkerViewManager(mapView, mapboxMap);
 
-                        markers = createMarkers();
-                        markerInfoBoxes = createMarkerInfoBoxes();
+                        for(int i = 0; i < reports.size(); i++){
+                            addMarker(reports.get(i));
+                            addInfoBox(reports.get(i), i);
+                        }
 
                         circleManager.addClickListener(new OnCircleClickListener() {
                             @Override
@@ -116,45 +142,36 @@ public class MainActivity extends AppCompatActivity implements
                 });
     }
 
-    private ArrayList<Circle> createMarkers(){
-        ArrayList<Circle> circles = new ArrayList<Circle>();
-        for(Report report : reports){
-            double[] latLng = report.getLatLng();
-            String[] colors = {"yellow", "green", "red", "blue"};
-            CircleOptions circleOptions = new CircleOptions()
-                    .withLatLng(new LatLng(latLng[0], latLng[1]))
-                    .withCircleRadius(12f)
-                    .withCircleColor(colors[report.getType()]);
-            circles.add(circleManager.create(circleOptions));
-        }
-        return circles;
+    private void addMarker(Report report){
+        double[] latLng = report.getLatLng();
+        String[] colors = {"yellow", "green", "red", "blue"};
+        CircleOptions circleOptions = new CircleOptions()
+                .withLatLng(new LatLng(latLng[0], latLng[1]))
+                .withCircleRadius(12f)
+                .withCircleColor(colors[report.getType()]);
+        markers.add(circleManager.create(circleOptions));
     }
 
-    private ArrayList<MarkerView> createMarkerInfoBoxes(){
-        ArrayList<MarkerView> markerViews = new ArrayList<MarkerView>();
-        for(int i = 0; i < reports.size(); i++){
-            Report report = reports.get(i);
-            View reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
-            reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-            ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText(report.getTitle());
-            ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("click to view");
-            reportInfoView.setTag(i);
-            reportInfoView.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    int reportId = (int)view.getTag();
-                    Intent intent = new Intent(MainActivity.this, ViewReportActivity.class);
-                    intent.putExtra("title", report.getTitle());
-                    intent.putExtra("desc", report.getDesc());
-                    intent.putExtra("type", report.getType());
-                    intent.putExtra("latLng", report.getLatLng());
-                    intent.putExtra("img", report.getImg());
-                    startActivity(intent);
-                }
-            });
-            markerViews.add(new MarkerView(new LatLng(report.getLatLng()[0], report.getLatLng()[1]), reportInfoView));
-        }
-        return markerViews;
+    private void addInfoBox(Report report, int i){
+        View reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
+        reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText(report.getTitle());
+        ((TextView)reportInfoView.findViewById(R.id.marker_window_snippet)).setText("click to view");
+        reportInfoView.setTag(i);
+        reportInfoView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                int reportId = (int)view.getTag();
+                Intent intent = new Intent(MainActivity.this, ViewReportActivity.class);
+                intent.putExtra("title", report.getTitle());
+                intent.putExtra("desc", report.getDesc());
+                intent.putExtra("type", report.getType());
+                intent.putExtra("latLng", report.getLatLng());
+                intent.putExtra("img", report.getImgs());
+                startActivity(intent);
+            }
+        });
+        markerInfoBoxes.add(new MarkerView(new LatLng(report.getLatLng()[0], report.getLatLng()[1]), reportInfoView));
     }
 
     @SuppressWarnings( {"MissingPermission"})
@@ -263,9 +280,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public void createReport(View view){
         Intent intent = new Intent(this, CreateReportActivity.class);
-        intent.putParcelableArrayListExtra("reports", reports);
         intent.putExtra("latLng", new double[] {49.916333351789525, -119.4833972102201});
-        startActivity(intent);
+        createReportResultLauncher.launch(intent);
     }
 
     public void conditionsBoard(View view){
@@ -293,28 +309,28 @@ public class MainActivity extends AppCompatActivity implements
                 "It's wet out here",
                 Report.ENV,
                 new double[] {49.904678312972024, -119.48708391177118},
-                null
+                new Bitmap[] {}
         ));
         reports.add(new Report(
                 "Trail is closed",
                 "Trail work on going for the next month ",
                 Report.INF,
                 new double[] {49.907225395275944, -119.47146570338202},
-                null
+                new Bitmap[] {}
         ));
         reports.add(new Report(
                 "Fallen tree",
                 "Watch out for a fallen tree blocking the trail. It's right after a blind corner",
                 Report.HZD,
                 new double[] {49.916333351789525, -119.4833972102201},
-                null
+                new Bitmap[] {}
         ));
         reports.add(new Report(
                 "Great Viewpoint",
                 "turn left after the big rock. Brings you to a great spot to watch the sunset",
                 Report.POI,
                 new double[] {49.91067885137928, -119.49023436582392},
-                null
+                new Bitmap[] {}
         ));
     }
 }

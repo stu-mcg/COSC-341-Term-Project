@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Report implements Parcelable {
     public static final int POI = 0;
     public static final int ENV = 1;
@@ -14,14 +16,14 @@ public class Report implements Parcelable {
     private String desc;
     private int type;
     private double [] latLng;
-    private Bitmap img;
+    private Bitmap[] imgs;
 
-    public Report(String title, String desc, int type, double[] latLng, Bitmap img) {
+    public Report(String title, String desc, int type, double[] latLng, Bitmap[] imgs) {
         this.title = title;
         this.desc = desc;
         this.type = type;
         this.latLng = latLng;
-        this.img = img;
+        this.imgs = imgs;
     }
 
     protected Report(Parcel in) {
@@ -29,7 +31,7 @@ public class Report implements Parcelable {
         desc = in.readString();
         type = in.readInt();
         latLng = in.createDoubleArray();
-        img = in.readParcelable(Bitmap.class.getClassLoader());
+        imgs = (Bitmap[]) in.createTypedArray(Bitmap.CREATOR);
     }
 
     public static final Creator<Report> CREATOR = new Creator<Report>() {
@@ -60,8 +62,8 @@ public class Report implements Parcelable {
         this.latLng = latLng;
     }
 
-    public void setImg(Bitmap img) {
-        this.img = img;
+    public void setImgs(Bitmap[] imgs) {
+        this.imgs = imgs;
     }
 
     public String getTitle() {
@@ -80,8 +82,8 @@ public class Report implements Parcelable {
         return latLng;
     }
 
-    public Bitmap getImg() {
-        return img;
+    public Bitmap[] getImgs() {
+        return imgs;
     }
 
     @Override
@@ -95,6 +97,6 @@ public class Report implements Parcelable {
         parcel.writeString(desc);
         parcel.writeInt(type);
         parcel.writeDoubleArray(latLng);
-        parcel.writeParcelable(img, i);
+        parcel.writeTypedArray(imgs, i);
     }
 }
