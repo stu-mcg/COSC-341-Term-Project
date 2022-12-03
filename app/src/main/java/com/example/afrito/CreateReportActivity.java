@@ -12,18 +12,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.mapbox.android.core.permissions.PermissionsListener;
@@ -34,8 +32,6 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
-import com.mapbox.mapboxsdk.maps.Image;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -85,6 +81,8 @@ public class CreateReportActivity extends AppCompatActivity implements
             }
         });
 
+        findViewById(R.id.createButton).setEnabled(false);
+
         EditText title = findViewById(R.id.title);
         EditText desc = findViewById(R.id.desc);
         RadioButton POI = findViewById(R.id.POI);
@@ -92,6 +90,24 @@ public class CreateReportActivity extends AppCompatActivity implements
         RadioButton HZD = findViewById(R.id.HZD);
         RadioButton INF = findViewById(R.id.INF);
         POI.setChecked(true);
+
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().equals("")){
+                    findViewById(R.id.createButton).setEnabled(false);
+                    return;
+                }
+                findViewById(R.id.createButton).setEnabled(true);
+            }
+        });
+
         ((RadioGroup)findViewById(R.id.reportTypeRadioGroup)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -149,7 +165,7 @@ public class CreateReportActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.create).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.createButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Report report = new Report(
