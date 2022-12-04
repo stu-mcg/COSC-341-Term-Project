@@ -282,7 +282,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void conditionsBoard(View view){
+        LocationComponent loc = mapboxMap.getLocationComponent();
+        assert loc.getLastKnownLocation() != null;
         Intent intent = new Intent(this, ConditionsBoardActivity.class);
+        intent.putExtra("reports", reports);
+        intent.putExtra("lastKnownLat", loc.getLastKnownLocation().getLatitude());
+        intent.putExtra("lastKnownLong", loc.getLastKnownLocation().getLongitude());
         startActivity(intent);
     }
 

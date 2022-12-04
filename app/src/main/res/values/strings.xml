@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">AFRITO</string>
     <string name="mapbox_access_token">pk.eyJ1Ijoic3R1bWNnIiwiYSI6ImNrcDRtdHE1ZjBiYTkyeHQ4NG5sc3VpM2MifQ.N_cSsEXlTBk7q92Xdpfbug</string>
+
+    <string-array name="distance">
+        <item>0.1</item>
+        <item>0.5</item>
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+    </string-array>
 </resources>
+
+

@@ -68,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:onClick="conditionsBoard"
-                android:text="Conditions Board" />
+                android:text="Reports near me" />
         </LinearLayout>
     </LinearLayout>
 
