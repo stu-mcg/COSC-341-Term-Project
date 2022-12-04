@@ -19,14 +19,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class ConditionsBoardActivity extends AppCompatActivity {
-    String distance;
-    ArrayList<Report> reports;
+public class ListReportsActivity extends AppCompatActivity {
+    private String distance;
+    private ArrayList<Report> reports;
+    private double[] userLatLng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conditions_board);
+        setContentView(R.layout.activity_list_reports);
+
+        userLatLng = getIntent().getExtras().getDoubleArray("lastKnownLatLng");
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -52,61 +58,67 @@ public class ConditionsBoardActivity extends AppCompatActivity {
     }
 
     public void populateReports(){
+        ((LinearLayout) findViewById(R.id.listReportsScrollView)).removeAllViews();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         distance = spinner.getSelectedItem().toString();
         double distanceDouble = Double.parseDouble(distance);
-        reports = new ArrayList<Report>();
         reports = getIntent().getExtras().getParcelableArrayList("reports");
+        Collections.sort(reports, new reportDistComparator(userLatLng));
         boolean empty = true;
-        double userLat = getIntent().getDoubleExtra("lastKnownLat", 0);
-        double userLong = getIntent().getDoubleExtra("lastKnownLong", 0);
         for(Report r : reports){
-            double reportLat = r.getLatLng()[0];
-            double reportLong = r.getLatLng()[1];
             ViewGroup layout = (ViewGroup) findViewById(R.id.linearLayout);
             View reportListItemView = LayoutInflater.from(this).inflate(R.layout.report_list_view, null);
-            Double userDistance = calculateDistance(reportLat, userLat, reportLong, userLong);
+            Double userDistance = calculateDistance(userLatLng, r.getLatLng());
             if(distanceDouble - userDistance > 0) {
                 ((TextView)findViewById(R.id.yourReportsEmptyMessageTextView)).setText("");
                 layout.setVisibility(View.VISIBLE);
-                if (!r.getUserCreated()) {
-                    empty = false;
-                    reportListItemView.setLayoutParams(new FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-                    ((TextView) reportListItemView.findViewById(R.id.reportListTitleTextView)).setText(r.getTitle());
-                    int type = r.getType();
-                    String[] colors = {"#ad9a1a", "#216b26", "#eb1d0e", "#0e1deb"};
-                    String[] types = {"Point of Interest", "Environmental Conditions", "Hazard", "Information"};
-                    ((TextView) reportListItemView.findViewById(R.id.reportListTypeTextview)).setText(types[type]);
-                    ((TextView) reportListItemView.findViewById(R.id.reportListTypeTextview)).setTextColor(Color.parseColor(colors[type]));
-                    ((TextView) reportListItemView.findViewById(R.id.reportListDescTextview)).setText(r.getDesc());
-                    ((LinearLayout) findViewById(R.id.listReportsScrollView)).addView(reportListItemView);
-                    reportListItemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(ConditionsBoardActivity.this, ViewReportActivity.class);
-                            intent.putExtra("report", r);
-                            startActivity(intent);
-                        }
-                    });
-                }
+                empty = false;
+                reportListItemView.setLayoutParams(new FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+                ((TextView) reportListItemView.findViewById(R.id.reportListTitleTextView)).setText(r.getTitle());
+                ((TextView) reportListItemView.findViewById(R.id.reportListDistTextView)).setText(Math.round(userDistance * 100)/100.0  + "km");
+                int type = r.getType();
+                String[] colors = {"#ad9a1a", "#216b26", "#eb1d0e", "#0e1deb"};
+                String[] types = {"Point of Interest", "Environmental Conditions", "Hazard", "Information"};
+                ((TextView) reportListItemView.findViewById(R.id.reportListTypeTextview)).setText(types[type]);
+                ((TextView) reportListItemView.findViewById(R.id.reportListTypeTextview)).setTextColor(Color.parseColor(colors[type]));
+                ((TextView) reportListItemView.findViewById(R.id.reportListDescTextview)).setText(r.getDesc());
+                ((LinearLayout) findViewById(R.id.listReportsScrollView)).addView(reportListItemView);
+                reportListItemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(ListReportsActivity.this, ViewReportActivity.class);
+                        intent.putExtra("report", r);
+                        startActivity(intent);
+                    }
+                });
             }
-        else{
-            ((TextView)findViewById(R.id.yourReportsEmptyMessageTextView)).setText("No reports near you.");
-            layout.setVisibility(View.INVISIBLE);
-        }
-
         }
         if(empty){
             ((TextView)findViewById(R.id.yourReportsEmptyMessageTextView)).setText("No reports near you.");
         }
 
     }
-    private Double calculateDistance(double lat1, double lat2, double lon1, double lon2){
 
-        lon1 = Math.toRadians(lon1);
-        lon2 = Math.toRadians(lon2);
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
+    public class reportDistComparator implements Comparator<Report>{
+        double[] userLatLng;
+
+        reportDistComparator(double[] userLatLng){
+            this.userLatLng = userLatLng;
+        }
+
+        @Override
+        public int compare(Report r1, Report r2) {
+            System.out.println((int)(calculateDistance(userLatLng, r1.getLatLng()) - calculateDistance(userLatLng, r2.getLatLng())));
+            return (int)(calculateDistance(userLatLng, r1.getLatLng())*100 - calculateDistance(userLatLng, r2.getLatLng())*100);
+        }
+    }
+
+    private Double calculateDistance(double[] latLng1, double[] latLng2){
+
+        double lon1 = Math.toRadians(latLng1[1]);
+        double lon2 = Math.toRadians(latLng2[1]);
+        double lat1 = Math.toRadians(latLng1[0]);
+        double lat2 = Math.toRadians(latLng2[0]);
 
         // Haversine formula
         double dlon = lon2 - lon1;

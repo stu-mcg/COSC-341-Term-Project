@@ -281,13 +281,12 @@ public class MainActivity extends AppCompatActivity implements
         createReportResultLauncher.launch(intent);
     }
 
-    public void conditionsBoard(View view){
+    public void ReportsList(View view){
         LocationComponent loc = mapboxMap.getLocationComponent();
         assert loc.getLastKnownLocation() != null;
-        Intent intent = new Intent(this, ConditionsBoardActivity.class);
+        Intent intent = new Intent(this, ListReportsActivity.class);
         intent.putExtra("reports", reports);
-        intent.putExtra("lastKnownLat", loc.getLastKnownLocation().getLatitude());
-        intent.putExtra("lastKnownLong", loc.getLastKnownLocation().getLongitude());
+        intent.putExtra("lastKnownLatLng", new double[] {loc.getLastKnownLocation().getLatitude(), loc.getLastKnownLocation().getLongitude()});
         startActivity(intent);
     }
 

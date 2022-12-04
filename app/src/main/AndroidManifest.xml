@@ -23,7 +23,7 @@
             android:name=".ViewReportActivity"
             android:exported="false" />
         <activity
-            android:name=".ConditionsBoardActivity"
+            android:name=".ListReportsActivity"
             android:exported="false" />
         <activity
             android:name=".CreateReportActivity"
