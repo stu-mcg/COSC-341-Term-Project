@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -136,26 +137,43 @@ public class CreateReportActivity extends AppCompatActivity implements
             }
         });
 
-        ((RadioGroup)findViewById(R.id.reportTypeRadioGroup)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                switch(checkedId) {
-                    case R.id.POI:
-                        type = 0;
-                        break;
-                    case R.id.ENV:
-                        type = 1;
-                        break;
-                    case R.id.HZD:
-                        type = 2;
-                        break;
-                    case R.id.INF:
-                        type = 3;
-                        break;
+        for(RadioButton r : new RadioButton[] {POI, ENV, HZD, INF}) {
+            r.setOnCheckedChangeListener(new RadioButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        int id = compoundButton.getId();
+                        switch (id) {
+                            case R.id.POI:
+                                type = 0;
+                                ENV.setChecked(false);
+                                HZD.setChecked(false);
+                                INF.setChecked(false);
+                                break;
+                            case R.id.ENV:
+                                type = 1;
+                                POI.setChecked(false);
+                                HZD.setChecked(false);
+                                INF.setChecked(false);
+                                break;
+                            case R.id.HZD:
+                                type = 2;
+                                POI.setChecked(false);
+                                ENV.setChecked(false);
+                                INF.setChecked(false);
+                                break;
+                            case R.id.INF:
+                                type = 3;
+                                POI.setChecked(false);
+                                ENV.setChecked(false);
+                                HZD.setChecked(false);
+                                break;
+                        }
+                    }
+                    updateLocation();
                 }
-                updateLocation();
-            }
-        });
+            });
+        }
 
         cameraResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override

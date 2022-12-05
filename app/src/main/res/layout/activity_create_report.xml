@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Create Report"
-                android:textSize="34sp" />
+                android:textSize="34sp"
+                android:textStyle="bold" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -69,7 +70,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Title: "
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/title"
@@ -90,47 +92,89 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Type:"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
-                        <RadioGroup
-                            android:id="@+id/reportTypeRadioGroup"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
-                            <RadioButton
-                                android:id="@+id/POI"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="POI"
-                                tools:layout_editor_absoluteX="75dp"
-                                tools:layout_editor_absoluteY="172dp" />
+                                android:orientation="horizontal">
 
-                            <RadioButton
-                                android:id="@+id/ENV"
-                                android:layout_width="69dp"
-                                android:layout_height="48dp"
-                                android:text="ENV"
-                                tools:layout_editor_absoluteX="241dp"
-                                tools:layout_editor_absoluteY="172dp" />
+                                <RadioButton
+                                    android:id="@+id/ENV"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Environmental Conditions"
+                                    android:textColor="#216b26"
+                                    android:textStyle="bold"
+                                    tools:layout_editor_absoluteX="241dp"
+                                    tools:layout_editor_absoluteY="172dp" />
 
-                            <RadioButton
-                                android:id="@+id/HZD"
-                                android:layout_width="wrap_content"
+                                <Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                                <RadioButton
+                                    android:id="@+id/HZD"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Hazard"
+                                    android:textColor="#eb1d0e"
+                                    android:textStyle="bold"
+                                    tools:layout_editor_absoluteX="160dp"
+                                    tools:layout_editor_absoluteY="172dp" />
+
+                                <Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="HZD"
-                                tools:layout_editor_absoluteX="160dp"
-                                tools:layout_editor_absoluteY="172dp" />
+                                android:orientation="horizontal">
 
-                            <RadioButton
-                                android:id="@+id/INF"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:text="INF"
-                                tools:layout_editor_absoluteX="302dp"
-                                tools:layout_editor_absoluteY="172dp" />
+                                <RadioButton
+                                    android:id="@+id/POI"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Point of Interest"
+                                    android:textColor="#0e1deb"
+                                    android:textStyle="bold"
+                                    tools:layout_editor_absoluteX="75dp"
+                                    tools:layout_editor_absoluteY="172dp" />
 
-                        </RadioGroup>
+                                <Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                                <RadioButton
+                                    android:id="@+id/INF"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Information"
+                                    android:textColor="#ad9a1a"
+                                    android:textStyle="bold"
+                                    tools:layout_editor_absoluteX="302dp"
+                                    tools:layout_editor_absoluteY="172dp" />
+
+                                <Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <TextView
@@ -138,7 +182,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Description:"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/desc"
@@ -146,14 +191,16 @@
                         android:layout_height="150dp"
                         android:ems="10"
                         android:gravity="start|top"
-                        android:inputType="textMultiLine" />
+                        android:inputType="textMultiLine"
+                        tools:ignore="SpeakableTextPresentCheck" />
 
                     <TextView
                         android:id="@+id/textView9"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Location:"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -210,7 +257,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Photos:"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"
