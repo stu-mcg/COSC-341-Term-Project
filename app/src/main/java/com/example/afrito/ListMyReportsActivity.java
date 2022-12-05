@@ -23,8 +23,11 @@ public class ListMyReportsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_my_reports);
+        populateReports();
+    }
 
-        reports = new ArrayList<Report>();
+    public void populateReports(){
+        ((LinearLayout)findViewById(R.id.listReportsScrollView)).removeAllViews();
         reports = MainActivity.reports;
         boolean empty = true;
         for(int i = 0; i < reports.size(); i++){
@@ -59,5 +62,11 @@ public class ListMyReportsActivity extends AppCompatActivity {
 
     public void home(View view){
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateReports();
     }
 }

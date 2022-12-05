@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.android.core.permissions.PermissionsListener;
@@ -76,6 +77,7 @@ public class CreateReportActivity extends AppCompatActivity implements
                 latLng = report.getLatLng();
             }else {
                 latLng = extras.getDoubleArray("latLng");
+                ((Button)findViewById(R.id.editReportDeleteButtonView)).setVisibility(View.GONE);
             }
         }
         imgs = new ArrayList<Bitmap>();
@@ -93,6 +95,7 @@ public class CreateReportActivity extends AppCompatActivity implements
 
         findViewById(R.id.createButton).setEnabled(false);
 
+
         EditText title = findViewById(R.id.title);
         EditText desc = findViewById(R.id.desc);
         RadioButton POI = findViewById(R.id.POI);
@@ -102,6 +105,7 @@ public class CreateReportActivity extends AppCompatActivity implements
         POI.setChecked(true);
 
         if(edit){
+            ((TextView)findViewById(R.id.createReportsHeadingTextView)).setText("Edit Report");
             title.setText(report.getTitle());
             findViewById(R.id.createButton).setEnabled(true);
             desc.setText(report.getDesc());
@@ -109,6 +113,16 @@ public class CreateReportActivity extends AppCompatActivity implements
             RadioButton[] radioButtons = {POI, ENV, HZD, INF};
             radioButtons[type].setChecked(true);
             ((Button)findViewById(R.id.createButton)).setText("Save Changes");
+            ((Button)findViewById(R.id.editReportDeleteButtonView)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent data = new Intent();
+                    data.putExtra("report", (Report)null);
+                    setResult(Activity.RESULT_OK, data);
+                    finish();
+                }
+            });
+
             for(int i = 0; i < report.getImgs().length; i++) {
                 LinearLayout imageScroller = (LinearLayout) findViewById(R.id.photoScroll);
                 ImageView imageView = new ImageView(CreateReportActivity.this);

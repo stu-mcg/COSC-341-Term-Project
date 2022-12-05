@@ -70,6 +70,11 @@ public class ViewReportActivity extends AppCompatActivity implements
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     Report editedReport = data.getExtras().getParcelable("report");
+                    if(editedReport == null){
+                        MainActivity.reports.remove(report);
+                        ViewReportActivity.this.finish();
+                        return;
+                    }
                     report.set(editedReport);
                     loadReport();
                     circleManager.deleteAll();
