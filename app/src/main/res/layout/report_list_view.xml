@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/boarder"
     android:orientation="vertical">
 
     <LinearLayout
@@ -50,6 +51,7 @@
     <TextView
         android:id="@+id/reportListDescTextview"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="TextView" />
+        android:layout_height="wrap_content"
+        android:maxHeight="70dp"
+        android:text="desc" />
 </LinearLayout>

@@ -5,12 +5,11 @@
       <map>
         <entry key="..\:/Users/macvi/AndroidStudioProjects/COSC341/COSC-341-Term-Project/app/src/main/res/layout/activity_conditions_board.xml" value="0.22" />
         <entry key="..\:/Users/macvi/AndroidStudioProjects/COSC341/COSC-341-Term-Project/app/src/main/res/layout/activity_create_report.xml" value="0.1796875" />
-        <entry key="..\:/Users/macvi/AndroidStudioProjects/COSC341/COSC-341-Term-Project/app/src/main/res/layout/activity_list_reports.xml" value="0.1796875" />
-        <entry key="..\:/Users/macvi/AndroidStudioProjects/COSC341/COSC-341-Term-Project/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
+        <entry key="app/src/main/res/drawable/boarder.xml" value="0.23" />
         <entry key="app/src/main/res/layout/activity_conditions_board.xml" value="0.13677811550151975" />
         <entry key="app/src/main/res/layout/activity_create_report.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_list_my_reports.xml" value="0.1802536231884058" />
-        <entry key="app/src/main/res/layout/activity_list_reports.xml" value="0.10778985507246377" />
+        <entry key="app/src/main/res/layout/activity_list_reports.xml" value="0.1754638671875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.5686279296875001" />
         <entry key="app/src/main/res/layout/activity_select_location.xml" value="0.13677811550151975" />
         <entry key="app/src/main/res/layout/activity_view_report.xml" value="0.2982940673828125" />
