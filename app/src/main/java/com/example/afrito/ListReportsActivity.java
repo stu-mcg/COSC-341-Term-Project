@@ -62,7 +62,7 @@ public class ListReportsActivity extends AppCompatActivity {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         distance = spinner.getSelectedItem().toString();
         double distanceDouble = Double.parseDouble(distance);
-        reports = getIntent().getExtras().getParcelableArrayList("reports");
+        reports = new ArrayList<Report>(MainActivity.reports);
         Collections.sort(reports, new reportDistComparator(userLatLng));
         boolean empty = true;
         for(Report r : reports){
@@ -87,7 +87,13 @@ public class ListReportsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(ListReportsActivity.this, ViewReportActivity.class);
-                        intent.putExtra("report", r);
+                        int idx = 0;
+                        for(int i = 0; i < MainActivity.reports.size(); i++){
+                            if(r == MainActivity.reports.get(i)){
+                                idx = i;
+                            }
+                        }
+                        intent.putExtra("reportId", idx);
                         startActivity(intent);
                     }
                 });
@@ -136,5 +142,11 @@ public class ListReportsActivity extends AppCompatActivity {
 
     public void home(View view){
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateReports();
     }
 }

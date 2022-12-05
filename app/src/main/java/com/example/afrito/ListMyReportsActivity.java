@@ -25,9 +25,11 @@ public class ListMyReportsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_my_reports);
 
         reports = new ArrayList<Report>();
-        reports = getIntent().getExtras().getParcelableArrayList("reports");
+        reports = MainActivity.reports;
         boolean empty = true;
-        for(Report r : reports){
+        for(int i = 0; i < reports.size(); i++){
+            final int idx = i;
+            Report r = reports.get(i);
             if(r.getUserCreated()){
                 empty = false;
                 View reportListItemView = LayoutInflater.from(this).inflate(R.layout.report_list_view, null);
@@ -44,7 +46,7 @@ public class ListMyReportsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(ListMyReportsActivity.this, ViewReportActivity.class);
-                        intent.putExtra("report", r);
+                        intent.putExtra("reportId", idx);
                         startActivity(intent);
                     }
                 });

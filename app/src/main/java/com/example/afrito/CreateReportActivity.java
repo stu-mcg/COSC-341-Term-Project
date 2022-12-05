@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,7 +53,9 @@ public class CreateReportActivity extends AppCompatActivity implements
     private LocationComponent locationComponent;
     private Style mapboxStyle;
 
+    private Boolean edit = false;
     private double[] latLng = {-1, -1};
+    private Report report;
     private int type = 0;
     private ArrayList<Bitmap> imgs;
     ActivityResultLauncher<Intent> cameraResultLauncher;
@@ -66,7 +69,13 @@ public class CreateReportActivity extends AppCompatActivity implements
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            latLng = extras.getDoubleArray("latLng");
+            if(extras.getBoolean("edit")){
+                edit = true;
+                report = extras.getParcelable("report");
+                latLng = report.getLatLng();
+            }else {
+                latLng = extras.getDoubleArray("latLng");
+            }
         }
         imgs = new ArrayList<Bitmap>();
 
@@ -90,6 +99,25 @@ public class CreateReportActivity extends AppCompatActivity implements
         RadioButton HZD = findViewById(R.id.HZD);
         RadioButton INF = findViewById(R.id.INF);
         POI.setChecked(true);
+
+        if(edit){
+            title.setText(report.getTitle());
+            findViewById(R.id.createButton).setEnabled(true);
+            desc.setText(report.getDesc());
+            type = report.getType();
+            RadioButton[] radioButtons = {POI, ENV, HZD, INF};
+            radioButtons[type].setChecked(true);
+            ((Button)findViewById(R.id.createButton)).setText("Save Changes");
+            for(int i = 0; i < report.getImgs().length; i++) {
+                LinearLayout imageScroller = (LinearLayout) findViewById(R.id.photoScroll);
+                ImageView imageView = new ImageView(CreateReportActivity.this);
+                float factor = CreateReportActivity.this.getResources().getDisplayMetrics().density;
+                imageView.setLayoutParams(new LinearLayout.LayoutParams((int) (150 * factor), (int) (150 * factor)));
+                imageScroller.addView(imageView);
+                imageView.setImageBitmap(report.getImgs()[i]);
+                imgs.add(report.getImgs()[i]);
+            }
+        }
 
         title.addTextChangedListener(new TextWatcher() {
             @Override
@@ -168,17 +196,26 @@ public class CreateReportActivity extends AppCompatActivity implements
         findViewById(R.id.createButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Report report = new Report(
-                        title.getText().toString(),
-                        desc.getText().toString(),
-                        type,
-                        latLng,
-                        imgs.toArray(new Bitmap[imgs.size()]),
-                        CreateReportActivity.this,
-                        true
-                        );
                 Intent data = new Intent();
-                data.putExtra("report", report);
+                if(edit){
+                    report.setTitle(title.getText().toString());
+                    report.setDesc(desc.getText().toString());
+                    report.setType(type);
+                    report.setLatLng(latLng);
+                    report.setImgs(imgs.toArray(new Bitmap[imgs.size()]), CreateReportActivity.this);
+                    data.putExtra("report", report);
+                }else{
+                    Report report = new Report(
+                            title.getText().toString(),
+                            desc.getText().toString(),
+                            type,
+                            latLng,
+                            imgs.toArray(new Bitmap[imgs.size()]),
+                            CreateReportActivity.this,
+                            true
+                    );
+                    data.putExtra("report", report);
+                }
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }
@@ -221,7 +258,9 @@ public class CreateReportActivity extends AppCompatActivity implements
                         mapboxStyle = style;
                         circleManager = new CircleManager(mapView, mapboxMap, style);
                         locationComponent = getLocationComponect();
-                        setLocationToCurrent();
+                        if(!edit) {
+                            setLocationToCurrent();
+                        }
                         updateLocation();
                     }
                 });

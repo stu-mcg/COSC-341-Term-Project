@@ -49,6 +49,38 @@ public class Report implements Parcelable {
         }
     }
 
+    public void set(Report report){
+        this.title = report.title;
+        this.desc = report.desc;
+        this.type = report.type;
+        this.latLng = report.latLng;
+        this.userCreated = report.userCreated;
+        this.imgs = report.getImgsStr();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setLatLng(double[] latLng) {
+        this.latLng = latLng;
+    }
+
+    public void setImgs(Bitmap[] imgs, Context context) {
+        this.imgs = new String[imgs.length];
+        for(int i = 0; i < imgs.length; i++) {
+            this.imgs[i] = saveToInternalStorage(imgs[i], context);
+        }
+    }
+
     private String saveToInternalStorage(Bitmap bitmapImage, Context context){
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
@@ -140,6 +172,10 @@ public class Report implements Parcelable {
 
     public Boolean getUserCreated() {
         return userCreated;
+    }
+
+    public String[] getImgsStr(){
+        return imgs;
     }
 
     public Bitmap[] getImgs() {

@@ -51,14 +51,15 @@ public class MainActivity extends AppCompatActivity implements
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
     private MapView mapView;
+    private Style style;
 
     private MarkerViewManager markerViewManager;
     private CircleManager circleManager;
     private ArrayList<Circle> markers;
-    private ArrayList<MarkerView> markerInfoBoxes;
+    private MarkerView currentMarkerInfoBox;
     private int selectedReport = -1;
 
-    private ArrayList<Report> reports;
+    public static ArrayList<Report> reports;
 
     ActivityResultLauncher<Intent> createReportResultLauncher;
 
@@ -74,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements
         reports = new ArrayList<Report>();
         createExampleReports(reports);
         markers = new ArrayList<Circle>();
-        markerInfoBoxes = new ArrayList<MarkerView>();
 
 
         // Mapbox access token is configured here. This needs to be called either in your application
@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements
                     Report report = data.getExtras().getParcelable("report");
                     reports.add(report);
                     addMarker(report);
-                    addInfoBox(report, reports.size());
                 }
             }
         });
@@ -109,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public boolean onMapClick(@NonNull LatLng point) {
                 if(selectedReport != -1){
-                    markerViewManager.removeMarker(markerInfoBoxes.get(selectedReport));
+                    markerViewManager.removeMarker(currentMarkerInfoBox);
+                    currentMarkerInfoBox = null;
                     selectedReport = -1;
                 }
                 return false;
@@ -119,27 +119,32 @@ public class MainActivity extends AppCompatActivity implements
                 new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
+                        MainActivity.this.style = style;
                         enableLocationComponent(style);
                         centerOnUser(null);
 
                         circleManager = new CircleManager(mapView, mapboxMap, style);
                         markerViewManager = new MarkerViewManager(mapView, mapboxMap);
 
-                        for(int i = 0; i < reports.size(); i++){
-                            addMarker(reports.get(i));
-                            addInfoBox(reports.get(i), i);
-                        }
-
-                        circleManager.addClickListener(new OnCircleClickListener() {
-                            @Override
-                            public boolean onAnnotationClick(Circle circle) {
-                                selectedReport = (int) circle.getId();
-                                markerViewManager.addMarker(markerInfoBoxes.get(selectedReport));
-                                return false;
-                            }
-                        });
+                        loadCircles();
                     }
                 });
+    }
+
+    private void loadCircles(){
+        for(int i = 0; i < reports.size(); i++){
+            addMarker(reports.get(i));
+        }
+
+        circleManager.addClickListener(new OnCircleClickListener() {
+            @Override
+            public boolean onAnnotationClick(Circle circle) {
+                selectedReport = (int) circle.getId();
+                currentMarkerInfoBox = addInfoBox(selectedReport);
+                markerViewManager.addMarker(currentMarkerInfoBox);
+                return false;
+            }
+        });
     }
 
     private void addMarker(Report report){
@@ -152,7 +157,8 @@ public class MainActivity extends AppCompatActivity implements
         markers.add(circleManager.create(circleOptions));
     }
 
-    private void addInfoBox(Report report, int i){
+    private MarkerView addInfoBox(int i){
+        Report report = reports.get(i);
         View reportInfoView = LayoutInflater.from(MainActivity.this).inflate(R.layout.report_info_marker_view, null);
         reportInfoView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         ((TextView)reportInfoView.findViewById(R.id.marker_window_title)).setText(report.getTitle());
@@ -163,11 +169,11 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 int reportId = (int)view.getTag();
                 Intent intent = new Intent(MainActivity.this, ViewReportActivity.class);
-                intent.putExtra("report", report);
+                intent.putExtra("reportId", i);
                 startActivity(intent);
             }
         });
-        markerInfoBoxes.add(new MarkerView(new LatLng(report.getLatLng()[0], report.getLatLng()[1]), reportInfoView));
+        return new MarkerView(new LatLng(report.getLatLng()[0], report.getLatLng()[1]), reportInfoView);
     }
 
     @SuppressWarnings( {"MissingPermission"})
@@ -233,7 +239,20 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         mapView.onResume();
+        if(selectedReport != -1) {
+            selectedReport = -1;
+            markerViewManager.removeMarker(currentMarkerInfoBox);
+            currentMarkerInfoBox = null;
+        }
+        circleManager.deleteAll();
+        circleManager = new CircleManager(mapView, mapboxMap, style);
+        loadCircles();
     }
 
     @Override
@@ -271,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements
 
     public void listReports(View view){
         Intent intent = new Intent(this, ListMyReportsActivity.class);
-        intent.putExtra("reports", reports);
         startActivity(intent);
     }
 
@@ -285,7 +303,6 @@ public class MainActivity extends AppCompatActivity implements
         LocationComponent loc = mapboxMap.getLocationComponent();
         assert loc.getLastKnownLocation() != null;
         Intent intent = new Intent(this, ListReportsActivity.class);
-        intent.putExtra("reports", reports);
         intent.putExtra("lastKnownLatLng", new double[] {loc.getLastKnownLocation().getLatitude(), loc.getLastKnownLocation().getLongitude()});
         startActivity(intent);
     }
