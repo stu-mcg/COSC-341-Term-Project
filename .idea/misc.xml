@@ -9,9 +9,9 @@
         <entry key="app/src/main/res/layout/activity_create_report.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_list_my_reports.xml" value="0.1802536231884058" />
         <entry key="app/src/main/res/layout/activity_list_reports.xml" value="0.10778985507246377" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.15544266628276976" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5686279296875001" />
         <entry key="app/src/main/res/layout/activity_select_location.xml" value="0.13677811550151975" />
-        <entry key="app/src/main/res/layout/activity_view_report.xml" value="0.29520355224609374" />
+        <entry key="app/src/main/res/layout/activity_view_report.xml" value="0.2982940673828125" />
         <entry key="app/src/main/res/layout/report_info_marker_view.xml" value="0.153106689453125" />
         <entry key="app/src/main/res/layout/report_list_view.xml" value="0.30922517638275593" />
         <entry key="app/src/main/res/layout/report_marker_icon.xml" value="0.15625" />

@@ -10,14 +10,97 @@
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        mapbox:layout_constraintBottom_toBottomOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toTopOf="parent"
-        mapbox:layout_constraintVertical_bias="0.0"
         mapbox:mapbox_cameraTargetLat="49.9141"
         mapbox:mapbox_cameraTargetLng="-119.4827"
         mapbox:mapbox_cameraZoom="9.0">
+
     </com.mapbox.mapboxsdk.maps.MapView>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toTopOf="parent"
+        mapbox:srcCompat="@drawable/yellow_circle" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@+id/imageView3"
+        mapbox:srcCompat="@drawable/green_circle" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@+id/imageView7"
+        mapbox:srcCompat="@drawable/red_circle" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@+id/imageView9"
+        mapbox:srcCompat="@drawable/blue_circle" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Information"
+        android:textStyle="bold"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        mapbox:layout_constraintStart_toEndOf="@+id/imageView10"
+        mapbox:layout_constraintTop_toTopOf="@+id/imageView10" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Point of Interest"
+        android:textStyle="bold"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        mapbox:layout_constraintStart_toEndOf="@+id/imageView3"
+        mapbox:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Hazard"
+        android:textStyle="bold"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/imageView9"
+        mapbox:layout_constraintStart_toEndOf="@+id/imageView9"
+        mapbox:layout_constraintTop_toTopOf="@+id/imageView9" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Environmental Conditions"
+        android:textStyle="bold"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/imageView7"
+        mapbox:layout_constraintStart_toEndOf="@+id/imageView7"
+        mapbox:layout_constraintTop_toTopOf="@+id/imageView7" />
 
     <LinearLayout
         android:layout_width="wrap_content"
